@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CompShop</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+<th:block th:include="/_header"></th:block>
+<th:block th:include="/_menu"></th:block>
+
+<div class="page-title">Подтверждение</div>
+<div class="customer-info-container">
+    <h3>Личные данные:</h3>
+    <ul>
+        <li>Имя: <span th:utext="${myStore.customerInfo.name}"></span></li>
+        <li>Почта: <span th:utext="${myStore.customerInfo.email}"></span></li>
+        <li>Телефон: <span th:utext="${myStore.customerInfo.phone}"></span></li>
+        <li>Адрес: <span th:utext="${myStore.customerInfo.address}"></span></li>
+    </ul>
+    <h3>Сумма корзины:</h3>
+    <ul>
+        <li>Количество: <span th:utext="${myStore.quantityTotal}"></span></li>
+        <li>Итог:
+            <span class="total"
+                  th:utext="${#numbers.formatDecimal(myStore.amountTotal,3,2,'COMMA')}">
+               </span>$
+        </li>
+    </ul>
+</div>
+<form method="POST" th:action="@{/pcmatrixConfirm}">
+    <a class="navi-item button21" th:href="@{/pcmatrix}">
+        Редактировать корзину
+    </a>
+    <a class="navi-item button21" th:href="@{/pcmatrixCustomer}">
+        Редактировать личные данные
+    </a>
+    <input type="submit" value="Send" class="button21 button-send-sc" />
+</form>
+<div class="container">
+    <div class="product-preview-container" th:each="storeLineInfo : ${myStore.storeLines}">
+        <ul>
+            <li>
+                <img class="product-image"
+                     th:src="@{|/productImage?code=${storeLineInfo.productInfo.code}|}" />
+            </li>
+            <li>
+                Код: <span th:utext="${storeLineInfo.productInfo.code}"></span>
+                <input
+                        type="hidden" name="code" th:value="${storeLineInfo.productInfo.code}" />
+            </li>
+            <li>Имя: <span th:utext="${storeLineInfo.productInfo.name}"></span></li>
+            <li>Цена:
+                <span class="price"
+                      th:utext="${#numbers.formatDecimal(storeLineInfo.productInfo.price,3,2,'COMMA')}">
+                  </span>
+            </li>
+            <li>Количество: <span th:utext="${storeLineInfo.quantity}"></span></li>
+            <li>Итог:
+                <span class="subtotal"
+                      th:utext="${#numbers.formatDecimal(storeLineInfo.amount,3,2,'COMMA')}">
+                  </span>$
+            </li>
+        </ul>
+    </div>
+</div>
+
+<th:block th:include="/_footer"></th:block>
+</body>
+</html>
